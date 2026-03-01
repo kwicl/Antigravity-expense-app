@@ -25,6 +25,8 @@
                 <div class="logo-icon"><i class="ri-node-tree"></i></div>
                 <h2>Smart Expenses<br><span style="font-size: 0.8rem; color: var(--accent-invest);">Otmane icl</span>
                 </h2>
+                <button class="btn-icon mobile-close-btn" id="mobileCloseBtn"
+                    style="display: none; margin-left: auto;"><i class="ri-close-line"></i></button>
             </div>
 
             <nav class="nav-menu">
@@ -59,9 +61,14 @@
         <main class="main-content">
             <!-- Top Bar -->
             <header class="top-bar glassmorphism">
-                <div class="page-title">
-                    <h1>Aperçu du Compte</h1>
-                    <p>Suivez vos flux de trésorerie et investissements en temps réel.</p>
+                <div class="page-title" style="display: flex; align-items: center; gap: 16px;">
+                    <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn" style="display: none;">
+                        <i class="ri-menu-line" style="font-size: 1.5rem; color: var(--text-primary);"></i>
+                    </button>
+                    <div>
+                        <h1>Aperçu du Compte</h1>
+                        <p>Suivez flux et investissements.</p>
+                    </div>
                 </div>
 
                 <div class="top-actions">
@@ -125,8 +132,6 @@
                         <h2 class="amount" id="totalExpenseVal">0.00</h2>
                     </div>
                 </div>
-            </section>
-
             </section>
 
             <!-- Detailed Table Views (Hidden by default) -->

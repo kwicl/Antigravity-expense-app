@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initForm();
     initGlobalDateFilter();
     initSidebarNav();
+    initMobileMenu();
 
     if (SCRIPT_URL) {
         fetchData();
@@ -69,6 +70,34 @@ function initQuickEntryTabs() {
             } else {
                 btn.style.background = 'var(--accent-income)';
                 btn.style.boxShadow = '0 4px 15px rgba(16, 185, 129, 0.4)';
+            }
+        });
+    });
+}
+
+// ==== MENU MOBILE ====
+function initMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+    const sidebar = document.querySelector('.sidebar');
+
+    if (mobileMenuBtn && sidebar) {
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.add('open');
+        });
+    }
+    if (mobileCloseBtn && sidebar) {
+        mobileCloseBtn.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+    }
+
+    // Fermer le menu sur mobile lors du clic sur un lien du menu
+    const navItems = document.querySelectorAll('.nav-menu .nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('open');
             }
         });
     });
