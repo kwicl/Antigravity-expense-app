@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Expenses Otmane icl</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glassmorphism-sidebar">
+            <div class="logo">
+                <div class="logo-icon"><i class="ri-node-tree"></i></div>
+                <h2>Smart Expenses<br><span style="font-size: 0.8rem; color: var(--accent-invest);">Otmane icl</span>
+                </h2>
+            </div>
+
+            <nav class="nav-menu">
+                <div class="nav-section-title">MENU PRINCIPAL</div>
+                <a href="#" class="nav-item active"><i class="ri-dashboard-3-line"></i> Tableau de bord</a>
+                <a href="#" class="nav-item"><i class="ri-arrow-right-down-line"></i> Revenus</a>
+                <a href="#" class="nav-item"><i class="ri-arrow-right-up-line"></i> Dépenses</a>
+                <a href="#" class="nav-item"><i class="ri-pie-chart-2-line"></i> Rapports</a>
+                <a href="#" class="nav-item"><i class="ri-settings-4-line"></i> Paramètres</a>
+            </nav>
+
+            <div class="pro-upgrade">
+                <div class="pro-content">
+                    <i class="ri-vip-crown-2-fill"></i>
+                    <h4>Smart Pro</h4>
+                    <p>Débloquez des analyses avancées.</p>
+                </div>
+            </div>
+
+            <div class="user-profile">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=10B981&color=fff&size=100"
+                    alt="User Avatar">
+                <div class="user-info">
+                    <h4 class="name">Admin User</h4>
+                    <p class="plan">Membre Premium</p>
+                </div>
+                <button class="btn-icon subtle"><i class="ri-more-2-fill"></i></button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar glassmorphism">
+                <div class="page-title">
+                    <h1>Aperçu du Compte</h1>
+                    <p>Suivez vos flux de trésorerie et investissements en temps réel.</p>
+                </div>
+
+                <div class="top-actions">
+                    <div class="search-bar">
+                        <i class="ri-search-line"></i>
+                        <input type="text" placeholder="Rechercher...">
+                    </div>
+                    <div class="date-picker glass-button" style="padding: 0 15px;">
+                        <i class="ri-calendar-event-line"></i>
+                        <select id="monthFilterSelect"
+                            style="background: transparent; border: none; color: #F8FAFC; outline: none; cursor: pointer; font-family: 'Inter', sans-serif; appearance: none; -webkit-appearance: none; padding-right: 5px; font-weight: 500;">
+                            <option value="" style="color: #000;">Toutes les périodes</option>
+                        </select>
+                        <i class="ri-arrow-down-s-line" style="margin-left: 0; pointer-events: none;"></i>
+                    </div>
+                    <button class="notification-btn btn-icon glass-button">
+                        <i class="ri-notification-3-line"></i>
+                        <span class="badge">0</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Loading Indicator -->
+            <div id="loadingOverlay"
+                style="display: none; text-align: center; padding: 20px; font-weight: bold; color: var(--accent-invest);">
+                <i class="ri-loader-4-line ri-spin" style="font-size: 2rem; vertical-align: middle;"></i>
+                Synchronisation avec Google Sheets...
+            </div>
+
+            <!-- KPI Summary Grid -->
+            <section class="kpi-grid">
+                <div class="kpi-card glassmorphism">
+                    <div class="kpi-header">
+                        <div class="kpi-icon-wrapper balance"><i class="ri-wallet-3-fill"></i></div>
+                        <div class="trend positive"><i class="ri-arrow-right-up-line"></i> ---</div>
+                    </div>
+                    <div class="kpi-content">
+                        <h3>Solde Total (Estimé)</h3>
+                        <h2 class="amount" id="totalBalanceVal">0.00</h2>
+                    </div>
+                </div>
+
+                <div class="kpi-card glassmorphism">
+                    <div class="kpi-header">
+                        <div class="kpi-icon-wrapper income"><i class="ri-funds-line"></i></div>
+                        <div class="trend positive"><i class="ri-arrow-right-up-line"></i> ---</div>
+                    </div>
+                    <div class="kpi-content">
+                        <h3>Revenus Totaux</h3>
+                        <h2 class="amount" id="totalIncomeVal">0.00</h2>
+                    </div>
+                </div>
+
+                <div class="kpi-card glassmorphism">
+                    <div class="kpi-header">
+                        <div class="kpi-icon-wrapper savings"><i class="ri-safe-2-fill"></i></div>
+                        <div class="trend positive"><i class="ri-arrow-right-up-line"></i> ---</div>
+                    </div>
+                    <div class="kpi-content">
+                        <h3>Dépenses Totales</h3>
+                        <h2 class="amount" id="totalExpenseVal">0.00</h2>
+                    </div>
+                </div>
+            </section>
+
+            </section>
+
+            <!-- Detailed Table Views (Hidden by default) -->
+            <section class="details-view" id="detailsView" style="display: none; margin-bottom: 32px;">
+                <div class="card glassmorphism full-width">
+                    <div class="card-header">
+                        <div>
+                            <h2 id="detailsTitle">Historique Complet</h2>
+                            <p class="subtitle">Détails chronologiques de vos opérations</p>
+                        </div>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 600px;">
+                            <thead>
+                                <tr
+                                    style="border-bottom: 1px solid var(--glass-border); color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">
+                                    <th style="padding: 16px;">Date</th>
+                                    <th style="padding: 16px;">Catégorie</th>
+                                    <th style="padding: 16px;">Note</th>
+                                    <th style="padding: 16px; text-align: right;">Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Dashboard Grid -->
+            <section class="dashboard-grid">
+                <!-- Left Column (Wider) -->
+                <div class="grid-left">
+                    <!-- Cash Flow Area Chart -->
+                    <div class="card glassmorphism chart-card full-width">
+                        <div class="card-header">
+                            <div>
+                                <h2>Évolution des Flux</h2>
+                                <p class="subtitle">Revenus vs Dépenses dans le temps</p>
+                            </div>
+                            <div class="chart-filters">
+                                <button class="filter-btn active">ALL</button>
+                            </div>
+                        </div>
+                        <div class="chart-container area-chart-wrapper">
+                            <canvas id="cashFlowChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Daily Flow Area Chart -->
+                    <div class="card glassmorphism chart-card full-width" id="dailyChartCard"
+                        style="display: none; margin-top: 24px;">
+                        <div class="card-header">
+                            <div>
+                                <h2>Évolution journalière</h2>
+                                <p class="subtitle">Détails de la période sélectionnée</p>
+                            </div>
+                        </div>
+                        <div class="chart-container area-chart-wrapper" style="height: 250px;">
+                            <canvas id="dailyFlowChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Expenses Donut Chart -->
+                    <div class="card glassmorphism chart-card full-width">
+                        <div class="card-header">
+                            <div>
+                                <h2>Répartition des dépenses</h2>
+                                <p class="subtitle">Analyse par catégorie</p>
+                            </div>
+                            <button class="btn-icon"><i class="ri-more-fill"></i></button>
+                        </div>
+                        <div class="donut-wrapper">
+                            <div class="chart-container donut-chart-container">
+                                <canvas id="expenseDonutChart"></canvas>
+                            </div>
+                            <div class="custom-legend" id="donutLegend">
+                                <!-- Populé via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Narrower) -->
+                <div class="grid-right">
+                    <!-- Quick Entry Widget -->
+                    <div class="card glassmorphism quick-entry-card">
+                        <div class="card-header">
+                            <h2>Nouvelle Saisie</h2>
+                            <p class="subtitle">Ajouter à la base de données</p>
+                        </div>
+
+                        <div class="transaction-tabs" id="typeTabs">
+                            <div class="tab active" data-type="expense">Dépense</div>
+                            <div class="tab" data-type="income">Revenu</div>
+                        </div>
+
+                        <form class="quick-entry-form" id="transactionForm">
+                            <div class="form-group amount-group">
+                                <label>Montant</label>
+                                <div class="amount-input-wrapper">
+                                    <span class="currency-symbol">DH</span>
+                                    <input type="number" id="amountInput" placeholder="0.00" class="large-input"
+                                        required step="0.01">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Catégorie</label>
+                                <div class="select-wrapper">
+                                    <i class="ri-price-tag-3-line input-icon"></i>
+                                    <select id="categoryInput" class="custom-select" required>
+                                        <option value="" disabled selected>Choisir une catégorie</option>
+                                        <option value="Alimentation">Alimentation</option>
+                                        <option value="Café">Café</option>
+                                        <option value="Santé">Santé</option>
+                                        <option value="Bien etre">Bien être</option>
+                                        <option value="Education enfant">Education enfant</option>
+                                        <option value="Electroménagers">Electroménagers</option>
+                                        <option value="Maison et frais de services">Maison et frais</option>
+                                        <option value="Appartements KENITRA ici">Appartement Kenitra</option>
+                                        <option value="Villa Camelia ici">Villa Camelia</option>
+                                        <option value="Appartement Casa ici">Appartement Casa</option>
+                                        <option value="Voyages">Voyages</option>
+                                        <option value="Déplacement de travail">Déplacement pro</option>
+                                        <option value="Salaire">Salaire / Revenu</option>
+                                        <option value="Autre">Autre</option>
+                                    </select>
+                                    <i class="ri-arrow-down-s-line dropdown-icon"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Date</label>
+                                <div class="input-with-icon">
+                                    <i class="ri-calendar-line input-icon"></i>
+                                    <input type="date" id="dateInput" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Note / Lieu (Optionnel)</label>
+                                <div class="input-with-icon">
+                                    <i class="ri-edit-2-line input-icon"></i>
+                                    <input type="text" id="noteInput" placeholder="Ex: Restaurant avec clients">
+                                </div>
+                            </div>
+
+                            <button type="submit" id="submitBtn" class="btn-primary full-width">
+                                Ajouter la transaction <i class="ri-arrow-right-line"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Recent Activity Widget -->
+                    <div class="card glassmorphism recent-mini">
+                        <div class="card-header">
+                            <h2>Opérations Récentes</h2>
+                        </div>
+                        <div class="activity-list" id="recentActivityList">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
