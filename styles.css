@@ -873,6 +873,8 @@ body {
     }
 
     .dashboard-grid {
+        display: flex;
+        flex-direction: column-reverse;
         gap: 16px;
     }
 
